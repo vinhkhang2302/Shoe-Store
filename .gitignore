@@ -4,3 +4,7 @@ client/.env
 **/node_modules/
 client/build/
 *.log
+
+.DS_Store
+Thumbs.db
+*.bak-*

@@ -1,0 +1,112 @@
+.wrapper {
+    padding: 62px 0 72px;
+    background: #f7f6f3;
+}
+
+.inner {
+    width: min(1320px, calc(100% - 64px));
+    margin: 0 auto;
+}
+
+.heading {
+    margin-bottom: 24px;
+
+    h2 {
+        margin: 7px 0 0;
+        color: #171717;
+        font-size: clamp(27px, 3vw, 36px);
+        font-weight: 800;
+        letter-spacing: -0.6px;
+    }
+}
+
+.eyebrow {
+    color: #a21e24;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.collection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.collection-card {
+    overflow: hidden;
+    border-radius: 12px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.image-wrap {
+    position: relative;
+    min-height: 310px;
+    overflow: hidden;
+    background: linear-gradient(140deg, #282624, #78716a);
+
+    > img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: .76;
+        transition: transform 280ms ease;
+    }
+}
+
+.image-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: rgba(255, 255, 255, .28);
+    font-size: 68px;
+}
+
+.collection-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(14, 13, 12, .82), rgba(14, 13, 12, .04) 75%);
+}
+
+.collection-copy {
+    position: absolute;
+    right: 22px;
+    bottom: 22px;
+    left: 22px;
+    display: grid;
+    gap: 7px;
+
+    > span:first-child { color: rgba(255,255,255,.82); font-size: 13px; }
+    strong { font-size: 25px; }
+}
+
+.collection-cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.collection-card:hover .image-wrap > img { transform: scale(1.04); }
+.collection-card:hover .collection-cta b { transform: translateX(4px); }
+.collection-cta b { transition: transform 160ms ease; }
+
+@media (max-width: 800px) {
+    .collection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .image-wrap { min-height: 260px; }
+    .collection-card:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 560px) {
+    .wrapper { padding: 42px 0 50px; }
+    .inner { width: calc(100% - 32px); }
+    .collection-grid { grid-template-columns: 1fr; }
+    .collection-card:last-child { grid-column: auto; }
+    .image-wrap { min-height: 230px; }
+}

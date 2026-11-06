@@ -1,0 +1,175 @@
+.wrapper {
+    width: 100%;
+    min-height: 100vh;
+    background: #fff;
+}
+
+.main {
+    width: min(1320px, calc(100% - 64px));
+    min-height: 65vh;
+    // Keep page content below the fixed 100px navigation bar.
+    margin: 128px auto 88px;
+}
+
+.intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 30px;
+
+    h1 {
+        margin: 8px 0 6px;
+        color: #171717;
+        font-size: clamp(30px, 4vw, 46px);
+        font-weight: 750;
+        letter-spacing: -1.5px;
+    }
+
+    p {
+        margin: 0;
+        color: #707070;
+        font-size: 16px;
+    }
+}
+
+.eyebrow {
+    color: #a21e24;
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 1.6px;
+}
+
+.result-count {
+    flex: 0 0 auto;
+    padding-bottom: 4px;
+    color: #707070;
+    font-size: 14px;
+}
+
+.toolbar {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: 16px 0;
+    margin-bottom: 20px;
+    border-top: 1px solid #eceae7;
+    border-bottom: 1px solid #eceae7;
+}
+
+.filter-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+    font-size: 13px;
+
+    select {
+        min-width: 190px;
+        height: 42px;
+        padding: 0 38px 0 14px;
+        border: 1px solid #dedbd6;
+        border-radius: 6px;
+        background: #fff;
+        color: #222;
+        font-size: 14px;
+    }
+}
+
+.sort-control select {
+    min-width: 210px;
+}
+
+.card {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.message-card {
+    display: grid;
+    place-content: center;
+    min-height: 300px;
+    padding: 32px;
+    border: 1px solid #eeeae5;
+    border-radius: 12px;
+    background: #faf9f7;
+    text-align: center;
+
+    h2 {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 22px;
+    }
+
+    p {
+        margin: 0;
+        color: #777;
+    }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 42px;
+}
+
+@media (max-width: 1100px) {
+    .main {
+        width: min(100% - 48px, 900px);
+    }
+
+    .card {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+}
+
+@media (max-width: 720px) {
+    .main {
+        width: calc(100% - 32px);
+        margin: 116px auto 56px;
+    }
+
+    .intro {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+
+        h1 {
+            font-size: 34px;
+        }
+    }
+
+    .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .filter-control {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+
+        select {
+            width: 100%;
+        }
+    }
+
+    .card {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 10px;
+    }
+
+    .result-count {
+        padding: 0;
+    }
+}
+
+@media (max-width: 380px) {
+    .card {
+        grid-template-columns: 1fr;
+    }
+}
