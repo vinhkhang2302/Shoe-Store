@@ -48,7 +48,11 @@ function RegisterUser() {
             }
         } catch (error) {
             // Nếu đăng ký thất bại
-            toast.error(error.response.data.message); // Hiển thị thông báo lỗi
+            const message = error?.response?.data?.message ||
+                (error?.response
+                    ? 'Đăng ký chưa thành công. Vui lòng kiểm tra lại thông tin.'
+                    : 'Không kết nối được máy chủ. Hãy kiểm tra backend đang chạy ở cổng 5001.');
+            toast.error(message);
         }
     };
 
