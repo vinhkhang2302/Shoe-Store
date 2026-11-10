@@ -3,7 +3,7 @@ import styles from '../Styles/Cart.module.scss';
 
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
-import request, { requestUpdateInfoCart } from '../Config/api';
+import request from '../Config/api';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
@@ -20,13 +20,11 @@ function Cart() {
 
     const navigate = useNavigate();
 
-    const [lengthCart, setLengthCart] = useState(0);
+    const lengthCart = 0;
 
     const [dataLengthProducts, setDataLengthProducts] = useState(0);
 
     const { dataCart, getCart } = useStore();
-
-    const token = document.cookie;
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -58,10 +56,9 @@ function Cart() {
     }, [dataCart]); // Chạy lại khi dataCart thay đổi
 
     const nextPage = () => {
-        if (dataProducts.length > 0) {
-            setTimeout(() => {
-                navigate('/payments');
-            }, 1000);
+        const hasProducts = dataCart?.some((cartItem) => cartItem.products?.length > 0);
+        if (hasProducts) {
+            navigate('/payments');
         } else {
             toast.error('Vui lòng thêm sản phẩm vào giỏ hàng để thanh toán !!!');
         }
@@ -135,8 +132,8 @@ function Cart() {
                             </table>
                         </div>
                         <div className={cx('btn-total')}>
-                            <button id={cx('btn-buy')}>
-                                <Link onClick={nextPage}>Tiến hành thanh toán</Link>
+                            <button id={cx('btn-buy')} type="button" onClick={nextPage}>
+                                Tiến hành thanh toán
                             </button>
                             <button id={cx('btn-continue')}>
                                 <Link to={'/category'}>Tiếp tục mua sắm</Link>

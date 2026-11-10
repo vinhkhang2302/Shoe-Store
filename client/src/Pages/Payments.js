@@ -3,7 +3,7 @@ import styles from '../Styles/Payments.module.scss';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import axios from 'axios';
-import request, { requestPaymentVNPAY, requestUpdateInfoCart } from '../Config/api';
+import request, { requestUpdateInfoCart } from '../Config/api';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,31 +21,12 @@ function Payments() {
     const [idHuyen, setIdHuyen] = useState(0);
     const [xa, setXa] = useState([]);
     const [address, setAddress] = useState('');
-    const [paymentMethod, setPaymentMethod] = useState('COD');
     const [dataProducts, setDataProducts] = useState([]);
 
     const [dataLengthProducts, setDataLengthProducts] = useState(0);
 
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = {
-                    name,
-                    phone,
-                    address,
-                };
-                const res = await requestUpdateInfoCart(data);
-                console.log(res);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchData();
-    }, [name, phone, address]);
 
     const navigate = useNavigate();
 
@@ -77,32 +58,46 @@ function Payments() {
         setDataProducts(newDataProducts[0]);
     }, [dataCart]);
 
-    const handlePaymentMethodChange = (e) => {
-        setPaymentMethod(e.target.value);
-    };
-
     useEffect(() => {
-        request.get('/api/cart').then((res) => setDataCart(res.data));
-    }, []);
+        let active = true;
+        request
+            .get('/api/cart')
+            .then((res) => {
+                if (active) setDataCart(Array.isArray(res.data) ? res.data : []);
+            })
+            .catch((error) => {
+                if (!active) return;
+                if (error.response?.status === 401) {
+                    navigate('/login', { replace: true });
+                    return;
+                }
+                setDataCart([]);
+                toast.error(error.response?.data?.message || 'Không thể tải giỏ hàng. Vui lòng thử lại.');
+            });
+
+        return () => {
+            active = false;
+        };
+    }, [navigate]);
 
     const handlePayment = async () => {
         try {
-            if (paymentMethod === 'Momo') {
-                const res = await request.post('/api/payment', { dataProducts, address });
-                window.open(res.data.payUrl);
-                await getCart();
-            } else if (paymentMethod === 'VNPAY') {
-                const res = await requestPaymentVNPAY();
-                window.open(res.vnpayResponse);
-                console.log(res);
-            } else if (paymentMethod === 'COD') {
-                const res = await request.post('/api/paymentcod', { dataProducts, address });
-                toast.success(res.data.message);
-                await getCart();
-                navigate('/paymentsuccess');
+            if (!name.trim() || !phone.trim() || !address.trim()) {
+                toast.error('Vui lòng điền họ tên, số điện thoại và địa chỉ nhận hàng.');
+                return;
             }
+            if (!dataProducts?.length) {
+                toast.error('Giỏ hàng đang trống. Vui lòng quay lại chọn sản phẩm.');
+                return;
+            }
+
+            await requestUpdateInfoCart({ name: name.trim(), phone: phone.trim(), address: address.trim() });
+            const res = await request.post('/api/paymentcod', { dataProducts, address });
+            toast.success(res.data.message);
+            await getCart();
+            navigate('/paymentsuccess');
         } catch (error) {
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || 'Không thể tạo đơn hàng. Vui lòng thử lại.');
         }
     };
     useEffect(() => {
@@ -227,42 +222,16 @@ function Payments() {
                                     name="paymentMethod"
                                     value="COD"
                                     id="payment-cod"
-                                    onChange={handlePaymentMethodChange}
-                                    checked={paymentMethod === 'COD'}
+                                    checked
+                                    readOnly
                                 />
                                 <label className={`form-check-label ${cx('payment-method-label')}`} htmlFor="payment-cod">
                                     Thanh Toán Khi Nhận Hàng
                                 </label>
                             </div>
-                            <div className="form-check">
-                                <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="paymentMethod"
-                                    value="Momo"
-                                    id="payment-momo"
-                                    onChange={handlePaymentMethodChange}
-                                    checked={paymentMethod === 'Momo'}
-                                />
-                                <label className={`form-check-label ${cx('payment-method-label')}`} htmlFor="payment-momo">
-                                    Thanh Toán Qua Momo
-                                </label>
-                            </div>
-
-                            <div className="form-check">
-                                <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="paymentMethod"
-                                    value="VNPAY"
-                                    id="payment-vnpay"
-                                    onChange={handlePaymentMethodChange}
-                                    checked={paymentMethod === 'VNPAY'}
-                                />
-                                <label className={`form-check-label ${cx('payment-method-label')}`} htmlFor="payment-vnpay">
-                                    Thanh Toán Qua VNPAY
-                                </label>
-                            </div>
+                            <p className={cx('payment-demo-note')}>
+                                Bản demo hiện chỉ hỗ trợ thanh toán khi nhận hàng (COD). MoMo và VNPay chưa được tích hợp.
+                            </p>
                             <div onClick={handlePayment} className={cx('btn-payment')}>
                                 <button id={cx('btn-buy')}>Hoàn Tất Đơn Hàng</button>
                             </div>

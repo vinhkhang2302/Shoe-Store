@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from '../Styles/Slider.module.scss';
-import banner from '../assests/imgs/banner.jpg';
+import adidasBanner from '../assests/imgs/Adidas.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruckFast, faRotateLeft, faMoneyBillWave, faHeadset } from '@fortawesome/free-solid-svg-icons';
 
@@ -14,15 +14,9 @@ const benefits = [
 
 function Slider() {
     return (
-        <section className={cx('wrapper')} aria-label="Giới thiệu cửa hàng Kainie">
+        <section className={cx('wrapper')} aria-label="Thông tin dịch vụ Kainie">
             <div className={cx('hero')}>
-                <img src={banner} alt="Bộ sưu tập giày thể thao Kainie" fetchPriority="high" />
-                <div className={cx('hero-shade')} />
-                <div className={cx('hero-copy')}>
-                    <span>CHUYỂN ĐỘNG THEO CÁCH CỦA BẠN</span>
-                    <h1>Tìm đôi giày đồng hành</h1>
-                    <p>Khám phá giày thể thao cho mọi phong cách và mọi ngày năng động.</p>
-                </div>
+                <img src={adidasBanner} alt="Bộ sưu tập giày Adidas — Kick up the cool" />
             </div>
             <div className={cx('benefits')}>
                 {benefits.map((benefit) => (

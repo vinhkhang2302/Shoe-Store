@@ -18,11 +18,6 @@ const modelCart = new Schema({
     name: { type: String, default: '' },
     phone: { type: Number, default: 0 },
     sumprice: { type: Number, default: 0 },
-    momoOrderId: { type: String },
-    momoRequestId: { type: String },
-    momoAmount: { type: Number },
-    vnpayTxnRef: { type: String },
-    vnpayAmount: { type: Number },
 });
 
 module.exports = mongoose.model('cart', modelCart);

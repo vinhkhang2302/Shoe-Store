@@ -12,6 +12,7 @@ import Navbar from '../Components/Navbar';
 
 import CardBody from '../Components/CardBody';
 import SelectSize from '../utils/SelectSize/SelectSize';
+import { getSizesForProductType } from '../utils/sizeOptions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight, faRulerHorizontal } from '@fortawesome/free-solid-svg-icons';
 import { useLocation } from 'react-router-dom';
@@ -82,11 +83,7 @@ function DetailProducts() {
     const availableImages = imageList.filter((image) => image && !failedImages.includes(image));
     const selectedImage = availableImages[Math.min(selectImg, Math.max(availableImages.length - 1, 0))];
     const productType = Number(product?.type || 0);
-    const sizes = productType === 1
-        ? ['39', '40', '41', '42', '43', '44', '45']
-        : productType === 2
-            ? ['35', '36', '37', '38', '39']
-            : ['34', '35', '36', '37', '38', '39'];
+    const sizes = getSizesForProductType(productType);
 
     const uniqueSimilarProducts = useMemo(() => {
         const seen = new Set();

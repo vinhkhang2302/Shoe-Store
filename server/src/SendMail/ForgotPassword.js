@@ -25,9 +25,9 @@ const ForgotPassword = async (email, token, otp) => {
             },
         });
         const info = await transport.sendMail({
-            from: `"GLAB" <${process.env.EMAIL_USER}>`,
+            from: `"Kainie Shoes Store" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: '🔐 Khôi phục mật khẩu - GLAB',
+            subject: '🔐 Khôi phục mật khẩu - Kainie Shoes Store',
             html: `
                 <div style="max-width: 500px; margin: auto; font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; border-radius: 10px; border: 1px solid #ddd;">
                     <div style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0px 2px 10px rgba(0,0,0,0.1);">
@@ -44,7 +44,7 @@ const ForgotPassword = async (email, token, otp) => {
                         <p style="color: #999; font-size: 14px; text-align: center;">Nếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này.</p>
                     </div>
                     <div style="text-align: center; font-size: 12px; color: #888; margin-top: 20px;">
-                        <p>© 2025 GLAB. All rights reserved.</p>
+                        <p>© ${new Date().getFullYear()} Kainie Shoes Store. All rights reserved.</p>
                     </div>
                 </div>
             `,

@@ -14,7 +14,7 @@ export const requestAuth = async () => {
 };
 
 export const requestRefreshToken = async () => {
-    const res = await request.get('/api/refresh-token');
+    const res = await request.get('/api/refresh-token', { skipAuthRefresh: true });
     return res.data;
 };
 
@@ -43,60 +43,43 @@ export const requestUpdateInfoCart = async (data) => {
     return res.data;
 };
 
-export const requestPaymentVNPAY = async (data) => {
-    const res = await request.post('/api/paymentvnpay', data);
-    return res.data;
-};
-
-let isRefreshing = false;
-let failedRequestsQueue = [];
+let refreshPromise = null;
 
 request.interceptors.response.use(
     (response) => response, // Trả về nếu không có lỗi
     async (error) => {
         const originalRequest = error.config;
 
-        // Nếu lỗi 401 (Unauthorized) và request chưa từng thử refresh
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-
-            if (!isRefreshing) {
-                isRefreshing = true;
-
-                try {
-                    // Gửi yêu cầu refresh token
-                    const token = cookies.get('logged');
-                    if (!token) {
-                        return;
-                    }
-                    await requestRefreshToken();
-
-                    // Xử lý lại tất cả các request bị lỗi 401 trước đó
-                    failedRequestsQueue.forEach((req) => req.resolve());
-                    failedRequestsQueue = [];
-                } catch (refreshError) {
-                    // Nếu refresh thất bại, đăng xuất
-                    failedRequestsQueue.forEach((req) => req.reject(refreshError));
-                    failedRequestsQueue = [];
-                    localStorage.clear();
-                    window.location.href = '/login'; // Chuyển về trang đăng nhập
-                } finally {
-                    isRefreshing = false;
-                }
-            }
-
-            // Trả về một Promise để retry request sau khi token mới được cập nhật
-            return new Promise((resolve, reject) => {
-                failedRequestsQueue.push({
-                    resolve: () => {
-                        resolve(request(originalRequest));
-                    },
-                    reject: (err) => reject(err),
-                });
-            });
+        // Preserve the original 401 when the visitor is not signed in. Returning
+        // undefined here makes callers fail later while reading response.data.
+        if (
+            error.response?.status !== 401 ||
+            !originalRequest ||
+            originalRequest._retry ||
+            originalRequest.skipAuthRefresh
+        ) {
+            return Promise.reject(error);
         }
 
-        return Promise.reject(error);
+        if (!cookies.get('logged')) return Promise.reject(error);
+
+        originalRequest._retry = true;
+
+        try {
+            // Share one refresh request among simultaneous 401 responses.
+            if (!refreshPromise) {
+                refreshPromise = requestRefreshToken().finally(() => {
+                    refreshPromise = null;
+                });
+            }
+            await refreshPromise;
+            return request(originalRequest);
+        } catch (refreshError) {
+            cookies.remove('logged');
+            localStorage.clear();
+            if (window.location.pathname !== '/login') window.location.assign('/login');
+            return Promise.reject(refreshError);
+        }
     },
 );
 

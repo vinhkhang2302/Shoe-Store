@@ -1,38 +1,19 @@
 .wrapper { width: 100%; }
 
 .hero {
-    position: relative;
-    width: 100%;
-    max-height: 620px;
+    width: min(1440px, 100%);
+    margin: 0 auto;
     overflow: hidden;
-    background: #23211f;
+    background: #f3f3f3;
 
-    > img {
+    img {
         display: block;
         width: 100%;
-        height: clamp(300px, 43vw, 620px);
+        height: auto;
+        max-height: 520px;
         object-fit: cover;
         object-position: center;
     }
-}
-
-.hero-shade {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.05) 74%);
-}
-
-.hero-copy {
-    position: absolute;
-    top: 50%;
-    left: max(7%, calc((100% - 1320px) / 2));
-    width: min(520px, 80%);
-    transform: translateY(-50%);
-    color: #fff;
-
-    > span { font-size: 12px; font-weight: 800; letter-spacing: 1.8px; }
-    h1 { margin: 12px 0; font-size: clamp(34px, 5vw, 60px); line-height: 1.05; letter-spacing: -1.5px; }
-    p { max-width: 440px; color: rgba(255,255,255,.88); font-size: 16px; line-height: 1.55; }
 }
 
 .benefits {
@@ -60,9 +41,7 @@
 }
 
 @media (max-width: 760px) {
-    .hero > img { height: clamp(260px, 58vw, 420px); }
-    .hero-copy { left: 24px; width: calc(100% - 48px); }
-    .hero-copy p { font-size: 14px; }
+    .hero img { max-height: 320px; object-fit: contain; }
     .benefits { width: calc(100% - 32px); grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; padding: 12px 0; }
     .benefit { padding: 14px 10px; border-right: 0; }
     .benefit:nth-child(odd) { padding-left: 0; }

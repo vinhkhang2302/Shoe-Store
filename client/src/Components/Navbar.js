@@ -8,7 +8,7 @@ function Navbar({ props }) {
         <div className={cx('wrapper')}>
             {props.map((item) => (
                 <span key={item._id}>
-                    Trang Chủ / {item.type == '1' ? 'Giày Nam' : item.type == '2' ? 'Giày Nữ' : 'Giày Trẻ Em'} /{' '}
+                    Trang Chủ / {String(item.type) === '1' ? 'Giày Nam' : String(item.type) === '2' ? 'Giày Nữ' : 'Giày Trẻ Em'} /{' '}
                     {item.name}
                 </span>
             ))}
